@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django
+  labels:
+    app: django
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+
+  selector:
+    matchLabels:
+      pod: django
+  template:
+    metadata:
+      labels:
+        pod: django
+    spec:
+      containers:
+        - name: django
+          image: deepaknair/pets-app
+          ports:
+            - containerPort: 8000
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: user
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+
+            - name: POSTGRES_HOST
+              value: postgres-service
+
+            - name: REDIS_HOST
+              value: redis-service
+          resources:
+            limits:
+              cpu: 500m
+
+            requests:
+              cpu: 200m
