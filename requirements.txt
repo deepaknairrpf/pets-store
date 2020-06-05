@@ -1,6 +1,6 @@
 asgiref==3.2.3
 Click==7.0
-Django==3.0.3
+Django==3.0.7
 django-click==2.1.0
 django-extensions==2.2.8
 django-redis-counter==0.1.1
